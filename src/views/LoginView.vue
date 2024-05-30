@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-fixed min-h-screen w-screen flex items-center justify-center bg-gray-100 text-black ">
+  <div class="bg-fixed min-h-screen w-screen flex items-center justify-center bg-gray-100 text-black">
     <div class="bg-white p-8 rounded-lg w-full max-w-sm shadow-2xl shadow-black">
-      <h2 class="text-2xl font-bold mb-6 text-center ">Contact Book</h2>
+      <h2 class="text-2xl font-bold mb-6 text-center">Contact Book</h2>
       <form @submit.prevent="login">
         <div class="mb-4">
           <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
@@ -31,6 +31,7 @@
             Log in
           </button>
         </div>
+        <p v-if="errorMessage" class="text-red-500 text-sm mt-4">{{ errorMessage }}</p>
       </form>
     </div>
   </div>
@@ -38,31 +39,47 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import authService from '../services/authService';
 
 export default defineComponent({
   name: 'LoginView',
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      errorMessage: ''
     };
   },
+  setup() {
+    const router = useRouter();
+    const route = useRoute();
+    return { router, route };
+  },
   methods: {
-    login() {
-      // Lógica de inicio de sesión
-      console.log('username:', this.username);
-      console.log('Password:', this.password);
+    
+    async login() {
+      try {
+        const data = await authService.login(this.username, this.password);
+        
+        const redirectPath = this.route.query.redirect as string || { name: 'home' };
+        this.router.push(redirectPath)
+      } catch (error) {
+        
+        this.errorMessage = 'Invalid username or password.';
+      }
     }
+  
   }
 });
 </script>
 
 <style scoped>
   .bg-fixed {
-      background-image: url('../assets/images/fondo.webp');
-      background-size: cover;
+      background-image: url('../assets/images/fondo.jpg');
+      background-size: 100%;
       background-repeat: no-repeat;
       background-attachment: fixed;
-      background-position: center;
+      background-position: 50% 50%  ;
     }
 </style>
