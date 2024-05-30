@@ -11,9 +11,11 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@chenfengyuan/vue-carousel": "^2.0.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vue3-carousel": "^0.3.3"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
